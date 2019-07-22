@@ -1,2 +1,3 @@
 pyFirmata
 pyserial
+pyglet

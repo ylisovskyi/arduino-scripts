@@ -2,6 +2,7 @@ from pyfirmata import Arduino
 import pyglet
 import time
 
+
 # Set-up Arduino and media player
 arduino = Arduino("COM3")
 player = pyglet.media.Player()

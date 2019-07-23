@@ -1,6 +1,6 @@
 # Arduino scripts
 
-This project contatins simple Arduino scripts in Python
+This project contains simple Arduino scripts in Python
 
 ### 1. Drum-pad
 

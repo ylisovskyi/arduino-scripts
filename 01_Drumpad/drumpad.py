@@ -1,56 +1,64 @@
-import pyglet
-import time
+import logging
+from pyglet import media  # Sound player
+from time import sleep
 from multiprocessing import Process
 from os import listdir
-from pyfirmata import Arduino
+from pyfirmata import Arduino  # Arduino signals reader
 
 
 def play_sound():
+    """Plays drum sound on Vibration Sensor beating """
     while True:
         if (arduino.digital[drum_num].read()):
+            if (player.playing):
+                player.seek(0)
+
             player.play()
-            time.sleep(player.source.duration)
+            sleep(player.source.duration)
             player.pause()
             player.seek(0)
 
 
 def change_volume():
+    """Changes player volume on Rotation Sensor adjustment"""
     while True:
-        player.volume = float(arduino.analog[volume_num].read()) / 1000  # Adjust volume
+        player.volume = float(arduino.analog[volume_num].read()) / 1000
 
 
 def change_sound():
+    """Changes drum sound to next from sounds queue on Digital Push button press"""
     while True:
         if (arduino.digital[switch_num].read()):
             if (player.playing):
                 player.pause()
-                player.next_source()  # Choose next drum sound
-                player.seek(0)
-                player.play()
+
+            player.next_source()
+            player.seek(0)
+            player.play()
 
 
 if __name__ == '__main__':
 
-    # Set-up Arduino and media player
+    # Set-up Arduino, media player and Logger
     arduino = Arduino("COM3")
-    player = pyglet.media.Player()
+    player = media.Player()
+    logger = logging.getLogger('Drum-pad')
 
-    # Read inout pin numbers
+    # Read input pin numbers
     drum_num = int(input('Input pin number for drum: '))
     volume_num = int(input('Input pin number for volume: '))
     switch_num = int(input('Input pin number for switch: '))
 
-    # Create drum sounds queue and set player volume
-    sounds = listdir('drum_sounds/')
     # Importing sounds
+    sounds = listdir('drum_sounds/')
     for sound in sounds:
-        print('Found {} file as a drum sound'.format(sound))
-        source = pyglet.media.load('drum_sounds/{}'.format(sound), streaming=False)
+        logger.info('Found {} file as a drum sound'.format(sound))
+        source = media.load('drum_sounds/{}'.format(sound), streaming=False)
         player.queue(source)
 
-    # Setting volume
-    player.volume = 0.5
+    # Setting player volume
     player.volume = float(arduino.analog[volume_num].read()) / 1000
+    logger.info('Player volume is set to {}'.format(player.volume))
 
     # Creating processes and starting
     p1 = Process(target=play_sound)

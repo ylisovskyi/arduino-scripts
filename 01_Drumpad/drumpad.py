@@ -1,4 +1,4 @@
-import logging
+import default_logger
 from pyglet import media  # Sound player
 from time import sleep
 from multiprocessing import Process
@@ -39,23 +39,17 @@ def change_sound():
 
 if __name__ == '__main__':
 
-    # Set-up Arduino and media player
-    arduino = Arduino("COM3")
-    player = media.Player()
-
-    # Set logging
-    logging.root.setLevel(logging.DEBUG)
-    logging.basicConfig(
-        level=logging.DEBUG,
-        format='%(asctime)s - %(name)s - %(levelname)s: %(message)s',
-        datefmt='%m-%d-%Y %H:%M:%S'
-    )
-    logger = logging.getLogger('drumpad')
+    logger = default_logger.get_logger('drumpad')
 
     # Read input pin numbers
+    arduino_port = int(input('Input the port number for your Arduino: '))
     drum_num = int(input('Input pin number for drum: '))
     volume_num = int(input('Input pin number for volume: '))
     switch_num = int(input('Input pin number for switch: '))
+
+    # Set-up Arduino and media player
+    arduino = Arduino("COM{}".format(arduino_port))
+    player = media.Player()
 
     # Importing sounds
     sounds = listdir(path.dirname(path.realpath(__file__)) + '\\drum_sounds\\')

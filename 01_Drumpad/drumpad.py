@@ -1,4 +1,4 @@
-import default_logger
+import custom_logger
 from pyglet import media  # Sound player
 from time import sleep
 from multiprocessing import Process
@@ -39,7 +39,7 @@ def change_sound():
 
 if __name__ == '__main__':
 
-    logger = default_logger.get_logger('drumpad')
+    logger = custom_logger.get_logger('drumpad')
 
     # Read input pin numbers
     arduino_port = int(input('Input the port number for your Arduino: '))

@@ -3,7 +3,7 @@ from pyglet import media  # Sound player
 from time import sleep
 from multiprocessing import Process
 from os import listdir, path
-from pyfirmata import Arduino  # Arduino signals reader
+from pyfirmata import Arduino  # Arduino signals reader/writer
 
 
 def play_sound(device):

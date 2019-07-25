@@ -53,10 +53,10 @@ if __name__ == '__main__':
     player = media.Player()
 
     # Importing sounds
-    sounds = listdir(path.dirname(path.realpath(__file__)) + '\\drum_sounds\\')
+    sounds = listdir('drum_sounds')
     for sound in sounds:
         logger.info('Found {} file as a drum sound'.format(sound))
-        source = media.load(path.dirname(path.realpath(__file__)) + '\\drum_sounds\\{}'.format(sound), streaming=False)
+        source = media.load(path.join('drum_sounds', sound), streaming=False)
         player.queue(source)
 
     # Setting player volume

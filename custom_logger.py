@@ -2,6 +2,7 @@ import logging
 
 
 def get_logger(name):
+    """Returns a logger with logging level DEBUG set and custom output format"""
     logging.root.setLevel(logging.DEBUG)
     logging.basicConfig(
         level=logging.DEBUG,

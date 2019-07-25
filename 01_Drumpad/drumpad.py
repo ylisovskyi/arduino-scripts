@@ -6,29 +6,30 @@ from os import listdir, path
 from pyfirmata import Arduino  # Arduino signals reader
 
 
-def play_sound():
+def play_sound(device):
     """Plays drum sound on Vibration Sensor beating """
     while True:
-        if (arduino.digital[drum_num].read()):
-            if (player.playing):
-                player.seek(0)
+        if (device.digital[drum_num].read()):
+            if (not player.playing):
+                player.play()
+                sleep(player.source.duration)
+                player.pause()
 
-            player.play()
-            sleep(player.source.duration)
-            player.pause()
             player.seek(0)
 
 
-def change_volume():
+def change_volume(device):
     """Changes player volume on Rotation Sensor adjustment"""
     while True:
-        player.volume = float(arduino.analog[volume_num].read()) / 1000
+        rotation_value = device.analog[volume_num].read()
+        if (rotation_value):
+            player.volume = float(rotation_value) / 1000
 
 
-def change_sound():
+def change_sound(device):
     """Changes drum sound to next from sounds queue on Digital Push button press"""
     while True:
-        if (arduino.digital[switch_num].read()):
+        if (device.digital[switch_num].read()):
             if (player.playing):
                 player.pause()
 
@@ -63,9 +64,9 @@ if __name__ == '__main__':
     logger.info('Player volume is set to {}'.format(player.volume))
 
     # Creating processes and starting
-    p1 = Process(target=play_sound)
-    p2 = Process(target=change_volume)
-    p3 = Process(target=change_sound)
+    p1 = Process(target=play_sound, args=(arduino,))
+    p2 = Process(target=change_volume, args=(arduino,))
+    p3 = Process(target=change_sound, args=(arduino,))
 
     p1.start()
     p2.start()

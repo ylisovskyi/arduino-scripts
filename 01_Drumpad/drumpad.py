@@ -60,9 +60,7 @@ if __name__ == '__main__':
         player.queue(source)
 
     # Setting player volume
-    rotation_value = arduino.analog[volume_num].read()
-    if (rotation_value):
-        player.volume = float(rotation_value) / 1000
+    player.volume = 0.5
     logger.info('Player volume is set to {}'.format(player.volume))
 
     # Creating processes and starting

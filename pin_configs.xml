@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<config>
+    <arduino>COM3</arduino>
+    <program name="drumpad">
+        <pin name="vibration" type="a" put="i">1</pin>
+        <pin name="button" type="d" put="i">2</pin>
+        <pin name="rotation" type="a" put="i">3</pin>
+    </program>
+    <program name="morse">
+        <pin name="sound" type="d" put="o">1</pin>
+    </program>
+</config>

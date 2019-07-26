@@ -1,25 +1,17 @@
+from . import *
 from arduino_base import ArduinoBase
 from time import sleep
-
-durations = {'.': 0.1, '-': 0.3}
-morse_map = {
-    'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.', 'G': '--.', 'H': '....', 'I': '..',
-    'J': '.---', 'K': '-.-', 'L': '.-..', 'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.',
-    'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-', 'Y': '-.--', 'Z': '--..', '1': '.----',
-    '2': '..---', '3': '...--', '4': '....-', '5': '.....', '6': '-....', '7': '--...', '8': '---..', '9': '----.',
-    '0': '-----', ',': '--..--', '.': '.-.-.-', '?': '..--..', '/': '-..-.', '-': '-....-', '(': '-.--.', ')': '-.--.-'
-}
 
 
 def play_sound(pin, duration):
     pin.write(1)
-    sleep(durations[duration])
+    sleep(DURATIONS[duration])
     pin.write(0)
 
 
 def play_character(pin, char):
-    for sound in morse_map[char]:
-        arduino.logger.info('Playing {}({})'.format(char, morse_map[char]))
+    for sound in MORSE_MAP[char]:
+        arduino.logger.info('Playing {}({})'.format(char, MORSE_MAP[char]))
         play_sound(pin, sound)
         sleep(0.1)
 

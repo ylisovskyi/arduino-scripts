@@ -19,6 +19,7 @@ def play_sound(pin, duration):
 
 def play_character(pin, char):
     for sound in morse_map[char]:
+        arduino.logger.info('Playing {}({})'.format(char, morse_map[char]))
         play_sound(pin, sound)
         sleep(0.1)
 

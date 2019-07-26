@@ -1,7 +1,8 @@
 import custom_logger
 import os
 from multiprocessing import Process
-from pyfirmata import Arduino, util  # Arduino signals reader/writer
+from pyfirmata import Arduino, util
+from serial.serialutil import SerialException
 from xml.etree import ElementTree
 
 
@@ -14,10 +15,17 @@ class ArduinoBase():
             file=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'pin_configs.xml')
         )
         arduino_port = config_xml.find('./arduino').text
-        self.logger.debug('Arduino port is detected as {}'.format(arduino_port))
+        self.logger.debug('Arduino port is configured as {}'.format(arduino_port))
 
-        # Set-up Arduino and media player
-        self.arduino = Arduino(arduino_port)
+        # Set-up Arduino
+        try:
+
+            self.arduino = Arduino(arduino_port)
+
+        except SerialException:
+            self.logger.error('Could not create Arduino device from port {}'.format(arduino_port))
+            return
+
         iterator = util.Iterator(self.arduino)
         iterator.start()
 
@@ -29,9 +37,9 @@ class ArduinoBase():
         for pin in pins.findall('pin'):
             name = pin.attrib['name']
             pin_type = pin.attrib['type']
-            number = int(pin.text)
             io = pin.attrib['put']
-            self.pins.name = self.arduino.get_pin('{}:{}:{}'.format(pin_type, number, io))
+            number = int(pin.text)
+            self.pins[name] = self.arduino.get_pin('{}:{}:{}'.format(pin_type, number, io))
             self.logger.debug('Name: {}, pin number: {}, type: {}, I/O: {}'.format(name, number, pin_type, io))
 
     def __del__(self):

@@ -10,10 +10,15 @@ def play_sound(pin, duration):
 
 
 def play_character(pin, char):
-    for sound in MORSE_MAP[char]:
-        arduino.logger.info('Playing {}({})'.format(char, MORSE_MAP[char]))
-        play_sound(pin, sound)
-        sleep(0.1)
+    try:
+
+        for sound in MORSE_MAP[char]:
+            arduino.logger.info('Playing {}({})'.format(char, MORSE_MAP[char]))
+            play_sound(pin, sound)
+            sleep(0.1)
+
+    except KeyError:
+        arduino.logger.error('Unrecognised character. Skipping...')
 
 
 def play_word(pin, word):
@@ -32,9 +37,10 @@ def play_sentence(pin, words):
 if __name__ == '__main__':
 
     arduino = ArduinoBase(logger_name='morse', program_id=2)
-    sound_pin = arduino.pins['sound']
+    if (arduino):
+        sound_pin = arduino.pins['sound']
 
-    sentence = ''
-    while sentence != 'q':
-        sentence = input('Enter your sentence (q for quit): ')
-        play_sentence(sound_pin, sentence)
+        sentence = ''
+        while sentence != 'q':
+            sentence = input('Enter your sentence (q for quit): ')
+            play_sentence(sound_pin, sentence)
